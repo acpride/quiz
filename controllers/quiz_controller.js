@@ -1,6 +1,10 @@
-// GET /quizzes/question
+var models = require('../models/models.js');
+
+// GET /quizes/question
 exports.question = function(req, res) {
-   res.render('quizzes/question', {pregunta: 'Capital de Italia'});
+  models.Quiz.findAll().success(function(quiz) {
+    res.render('quizzes/question', { pregunta: quiz[0].pregunta});
+  })
 };
 
 // GET /quizzes/answer
