@@ -47,7 +47,7 @@ exports.answer = function(req, res) {
 
 //GET /quizzes?search
 exports.search = function (req, res) {
-  models.Quiz.findAll({where:["pregunta like ?", req.query.search], order:"pregunta"}).then(function (quiz){
-    res.render('quizzes/search', { quiz: quiz});
+  models.Quiz.findAll({where:["pregunta like ?", '%'+req.query.search+'%'], order:"pregunta"}).then(function (quizes){
+    res.render('quizzes/search', { quizes: quizes});
   }
 )};
