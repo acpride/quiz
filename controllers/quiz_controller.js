@@ -2,8 +2,8 @@ var models = require('../models/models.js');
 
 // GET /quizzes
 exports.index = function(req, res) {
-  models.Quiz.findAll().then(function(quizes) {
-    res.render('quizzes/index.ejs', { quizes: quizes});
+  models.Quiz.findAll().then(function(quizzes) {
+    res.render('quizzes/index.ejs', { quizzes: quizzes});
   })
 };
 
