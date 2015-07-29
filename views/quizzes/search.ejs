@@ -1,0 +1,9 @@
+<h3>Resultado de busqueda </h3>
+El portal donde podra crear sus propios juegos!
+
+<table>			
+	</td></tr>
+	<% var i; for(i=0; i < quizes.length; i++){ %>
+		<tr><td><a href="quizzes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td></tr>
+	<% } %>
+</table>

@@ -13,6 +13,7 @@ router.param('quizId', quizController.load);  // autoload :quizId
 
 // Definición de rutas de /quizes
 router.get('/quizzes',                      quizController.index);
+router.get('/quizzes/search',				quizController.search);
 router.get('/quizzes/:quizId(\\d+)',        quizController.show);
 router.get('/quizzes/:quizId(\\d+)/answer', quizController.answer);
 
