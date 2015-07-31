@@ -65,17 +65,18 @@ exports.new = function(req, res) {
 exports.create = function(req, res) {
   var quiz = models.Quiz.build( req.body.quiz );
 
-  quiz
-  .validate()
-  .then(
-    function(err){
-      if (err) {
-        res.render('quizzes/new', {quiz: quiz, errors: err.errors});
-      } else {
-        quiz // save: guarda en DB campos pregunta y respuesta de quiz
-        .save({fields: ["pregunta", "respuesta"]})
-        .then( function(){ res.redirect('/quizzes')}) 
-      }      // res.redirect: Redirección HTTP a lista de preguntas
+  var errors = quiz.validate();
+  
+  if (errors) {
+    var i=0; var errores = new Array();//se convierte en [] con la propiedad message por compatibilidad con layout
+    for (var prop in errors) {
+      errores[i++] = { message: errors[prop] };
     }
-  );
+    res.render('quizzes/new', {quiz: quiz, errors: errores});
+  } else {
+    quiz.save({fields: ["pregunta", "respuesta","tema"]}).then( function() {
+      res.redirect('/quizzes');
+    });
+  }
+
 };
