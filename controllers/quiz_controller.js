@@ -93,17 +93,18 @@ exports.update = function(req, res) {
   req.quiz.pregunta  = req.body.quiz.pregunta;
   req.quiz.respuesta = req.body.quiz.respuesta;
 
-  req.quiz
-  .validate()
-  .then(
-    function(err){
-      if (err) {
-        res.render('quizzes/edit', {quiz: req.quiz, errors: err.errors});
-      } else {
-        req.quiz     // save: guarda campos pregunta y respuesta en DB
-        .save( {fields: ["pregunta", "respuesta"]})
-        .then( function(){ res.redirect('/quizzes');});
-      }     // Redirección HTTP a lista de preguntas (URL relativo)
+  var errors = quiz.validate();
+
+  if (errors) {
+    var i=0; var errores = new Array();//se convierte en [] con la propiedad message por compatibilidad con layout
+    for (var prop in errors) {
+      errores[i++] = { message: errors[prop] };
     }
-  );
+    res.render('quizzes/edit', {quiz: req.quiz, errors: errores});
+  } else {
+    req.quiz.save({fields: ["pregunta", "respuesta"]}).then( function() {
+      res.redirect('/quizzes');
+    });
+  }
+  
 };
