@@ -55,7 +55,7 @@ exports.search = function (req, res) {
 // GET /quizzes/new
 exports.new = function(req, res) {
   var quiz = models.Quiz.build(
-    {pregunta: "Pregunta", respuesta: "Respuesta"}
+    {pregunta: "Pregunta", respuesta: "Respuesta", tema: "Tema"}
   );
 
   res.render('quizzes/new', {quiz: quiz, errors: []});
@@ -66,15 +66,22 @@ exports.create = function(req, res) {
   var quiz = models.Quiz.build( req.body.quiz );
 
   var errors = quiz.validate();
+
+  console.log("pregunta: " + quiz.pregunta);
+  console.log("respuesta: " + quiz.respuesta);
+  console.log("tema: " + quiz.tema);
   
   if (errors) {
+    console.log("Error en validate");
     var i=0; var errores = new Array();//se convierte en [] con la propiedad message por compatibilidad con layout
     for (var prop in errors) {
+      console.log("Error: " + prop);
       errores[i++] = { message: errors[prop] };
     }
     res.render('quizzes/new', {quiz: quiz, errors: errores});
   } else {
-    quiz.save({fields: ["pregunta", "respuesta","tema"]}).then( function() {
+    quiz.save({fields: ["pregunta", "respuesta", "tema"]}).then( function() {
+      console.log("pregunta guardada");
       res.redirect('/quizzes');
     });
   }
@@ -93,6 +100,7 @@ exports.update = function(req, res) {
   var quiz = models.Quiz.build( req.body.quiz );
   req.quiz.pregunta  = req.body.quiz.pregunta;
   req.quiz.respuesta = req.body.quiz.respuesta;
+  req.quiz.tema = req.body.quiz.tema;
 
   var errors = quiz.validate();
 
@@ -103,7 +111,7 @@ exports.update = function(req, res) {
     }
     res.render('quizzes/edit', {quiz: req.quiz, errors: errores});
   } else {
-    req.quiz.save({fields: ["pregunta", "respuesta"]}).then( function() {
+    req.quiz.save({fields: ["pregunta", "respuesta", "tema"]}).then( function() {
       res.redirect('/quizzes');
     });
   }
