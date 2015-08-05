@@ -10,6 +10,13 @@
 <p><strong>Comentarios:</strong></p>
 <ol>
 <%for(index in quiz.comments){%>
-	<li><%=quiz.comments[index].texto%></li>
+	<%if(quiz.comments[index].publicado || session.user){%>
+		<li><%=quiz.comments[index].texto%>
+			<%if(session.user && !quiz.comments[index].publicado){%>
+				<a href="/quizzes/<%= quiz.id %>/comments/<%=quiz.comments[index].id%>/publish"><button>Publicar</button></a>
+			<%}%>
+		</li>
+	<%}%>	
+	
 <%}%>
 </ol>
