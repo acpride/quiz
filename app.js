@@ -44,6 +44,32 @@ app.use(function(req, res, next) {
   next();
 });
 
+
+//Control sesión expirada
+app.use(function(req, res, next) {
+    if(req.session.user){// hay sesión 
+        if(!req.session.lastAccess){
+            //guardamos en session el tiempo actual
+            req.session.lastAccess=(new Date()).getTime();
+        }else{
+            //controlamos si nos pasamos de 2 minutos de inactividad (120000 milisegundos)
+            if((new Date()).getTime()-req.session.lastAccess > 120000){
+                //sesión expirada, borramos usuario de la sesión
+                delete req.session.user;
+                delete req.session.lastAccess;
+                //redirigimos a login
+                res.render('sessions/new', {errors: [{"message": "Sesión caducada, vuelva a acceder"}]});
+
+            }else{
+                //actualizamos ultimo acceso session
+                req.session.lastAccess=(new Date()).getTime();              
+            }
+        }
+    }
+    next();
+});
+
+
 app.use('/', routes);
 
 // catch 404 and forward to error handler
